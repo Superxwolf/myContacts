@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+@section Styles
+{
+    <link rel="stylesheet" type="text/css" href="~/lib/toastify-js/toastify-js.min.css" />
+
+    <style>
+        .navbar
+        {
+            background-color: #8FBDD3;
+        }
+
+        #ContactModal
+        {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background-color: white;
+            top: 100px;
+            left: 50px;
+            box-shadow: 0 0 2px 2px gray;
+            z-index: 9999;
+            border: 1px solid black;
+        }
+
+        #ModalDragHandle
+        {
+            background-color: gray;
+            cursor: grab;
+            color: white;
+        }
+
+        .ui-draggable-dragging #ModalDragHandle
+        {
+            cursor: grabbing !important;
+        }
+
+        .red
+        {
+            color: red;
+        }
+
+        #LoaderIndicator
+        {
+            margin: auto;
+            margin-top: 30px;
+        }
+    </style>
+}
+@section Scripts
+{
+  <script src="@Url.Content("~/lib/toastify-js/toastify-js.min.js")"></script>
+  <script src="@Url.Content("~/lib/just-validate/just-validate.min.js")"></script>
+  <script src="@Url.Content("~/lib/Inputmask/jquery.Inputmask.min.js")"></script>
+  <script src="@Url.Content("~/js/contacts.js")"></script>
+}
+
+<nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3 px-2">
+    <div class="container-fluid">
+        <span>myContacts | Lookup</span>
+        <span id="userInfo">Hello <span id="UsernameDisplay"></span> | <a href="#" onclick="Logout()">Logout</a></span>
+        <!--
+        <a class="navbar-brand" asp-area="" asp-page="/Index">myContacts</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                </li>
+            </ul>
+        </div>
+        -->
+    </div>
+</nav>
+
+<div class="px-5 row g-0">
+    <div class="col-xs-12 col-md-6 pe-5">
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Filter:</span>
+          </div>
+          <input id="SearchFormInput" type="text" class="form-control" placeholder="Name" aria-label="Filter" aria-describedby="basic-addon1">
+          <button type="button" class="btn btn-primary" id="SearchFormBtn" onclick="FetchContacts()">Search</button>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-2">
+        <button type="button" class="btn btn-info" id="AddNewContact" onclick="AddContact()">+ Add New</button>
+    </div>
+</div>
+
+<table id="contactsTable" class="table table-striped">
+    <thead class="thead-light">
+        <tr>
+            <td></td>
+            <td>Name</td>
+            <td>Phone</td>
+            <td>Fax</td>
+            <td>eMail</td>
+            <td>Last Update</td>
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>
+
+<div id="LoaderIndicator" class="dot-flashing"></div>
+
+
+<div id="ContactModal" style="display: none">
+    <div id="ModalDragHandle" class="mb-1 p-2 row g-0">
+        <div class="col-8">CONTACT</div>
+        <span id="ActionButtons" class="float-right col-4">
+            <a href="#" onclick="SaveContactModal()">SAVE</a> | <a href="#" onclick="CloseContactModal()">CANCEL</a>
+        </span>
+    </div>
+    <form id="contactInfo" class="px-2">
+        <input id="ContactId" name="ContactId" hidden value="0"/>
+
+        <div id="ModalErrorMessage"></div>
+
+        <div class="input-group mb-2">
+          <div class="input-group-prepend w-25">
+            <span class="input-group-text" id="basic-addon1">Name<span class="red">*</span></span>
+          </div>
+          <input id="Name" type="text" class="form-control" aria-label="Filter" aria-describedby="basic-addon1" maxlength="50" required>
+        </div>
+
+        <div class="input-group mb-2">
+          <div class="input-group-prepend w-25">
+            <span class="input-group-text" id="basic-addon1">Phone<span class="red">*</span></span>
+          </div>
+          <input id="Phone" type="text" class="form-control" aria-label="Filter" aria-describedby="basic-addon1" data-inputmask="'mask': '(999) 999-9999'" required disabled>
+        </div>
+
+        <div class="input-group mb-2">
+          <div class="input-group-prepend w-25">
+            <span class="input-group-text" id="basic-addon1">Fax</span>
+          </div>
+          <input id="Fax" type="text" class="form-control" aria-label="Filter" aria-describedby="basic-addon1" disabled data-inputmask="'mask': '(999) 999-9999'">
+        </div>
+
+        <div class="input-group mb-2">
+          <div class="input-group-prepend w-25">
+            <span class="input-group-text" id="basic-addon1">eMail</span>
+          </div>
+          <input id="eMail" type="text" class="form-control" aria-label="Filter" aria-describedby="basic-addon1" disabled data-inputmask-alias="email">
+        </div>
+
+        <div class="input-group mb-2">
+          <div class="input-group-prepend w-25">
+            <span class="input-group-text" id="basic-addon1">Notes</span>
+          </div>
+          <textarea id="Notes" class="form-control" aria-label="Filter" aria-describedby="basic-addon1" disabled></textarea>
+        </div>
+    </form>
+</div>

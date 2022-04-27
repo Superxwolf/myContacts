@@ -1,0 +1,60 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+@section Styles
+{
+    <style>
+        html, body
+        {
+            background-color: #8FBDD3;
+        }
+
+        #LoginBox
+        {
+            position: absolute;
+            margin-left: auto;
+            margin-right: auto;
+            left: 0;
+            right: 0;
+            width: 350px;
+            height: 400px;
+            top: 10%;
+            border-radius: 10px;
+            box-shadow: 0 0 5px 2px black;
+            background-color: white;
+        }
+
+        #LoginBoxTitle
+        {
+            padding-top: 50px;
+        }
+
+        #LoginBoxForm
+        {
+            bottom: 50px;
+        }
+
+        #LoaderIndicator
+        {
+            margin: auto;
+            margin-top: 15px;
+        }
+    </style>
+}
+@section Scripts
+{
+  <script src="@Url.Content("~/js/index.js")"></script>
+}
+
+<div class="text-center">
+    <div id="LoginBox">
+        <h2 id="LoginBoxTitle" class="mb-2">myContacts v1.0</h2>
+        <form id="LoginBoxForm" class="px-5" action="javascript:DoLogin()">
+            <label>Username</label><br />
+            <input id="username" type="text" name="username" class="mb-3 form-control" aria-label="Username" aria-describedby="basic-addon1"/>
+            <span id="LoginError"></span>
+            <button id="loginBtn" type="button" class="btn-primary btn-primary" onclick="DoLogin()">Enter</button>
+            <div id="LoaderIndicator" class="dot-flashing" style="display: none;"></div>
+        </form>
+    </div>
+</div>
